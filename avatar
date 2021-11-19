@@ -1,0 +1,14 @@
+from pygame.math import Vector2
+
+
+class avatar:
+    def __init__(self):
+        self.taille = 5
+        self.couleur = (255, 0, 0)
+        self.masse = 5
+        self.position = Vector2(800,450)
+        self.vitesse = Vector2(0,0)
+        self.vitesseMin = Vector2(0,0)
+        self.vitesseMax = Vector2(0,0)
+        self.acc
+
