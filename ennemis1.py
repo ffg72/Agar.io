@@ -1,70 +1,80 @@
-import random
-from math import floor
-
 import pygame
 from pygame.math import Vector2
 
-from dna import DNA
+import core
+from core import getMouseLeftClick
 
 
-class Rocket:
-    def __init__(self,lifetime=200):
-        self.pos = Vector2(400,600)
-        self.vel = Vector2(random.uniform(-1,1),random.uniform(-1,1)).normalize()
-        self.acc = Vector2()
-        self.dna = DNA(lifetime)
-        self.maxAcc=300
-        self.maxVel=4
-        self.count=0
-        self.fitness = 0
-        self.complete=False
+class Ennemis:
+    def __init__(self):
+        self.taille = 10
+        self.couleur = (255, 255, 0)
+        self.masse = 5
+        self.position = Vector2(500, 500)
+        self.vitesse = Vector2(0, 0)
+        self.vitesseMin = Vector2(0, 0)
+        self.vitesseMax = 2
+        self.k = 0.01
+        self.l0 = 1
+        self.accMax = 0.5
 
-    def calcFitness(self,target):
+    def affichage(self):
+        core.Draw.circle(self.couleur, self.position, self.taille)
+
+    def move(self, destination):
+        if destination is not None:
+            # bilan des forces
+            # F=k * u * |l-l0|
+
+            l = self.position.distance_to(destination)
+            u = destination - self.position
+            u = u.normalize()
+
+            F = self.k * u * abs(l - self.l0) / self.taille
+            print(F)
+
+            # limiter la force max
+            if F.length() > self.accMax:
+                F.scale_to_length(self.accMax)
+
+            # ajouter la force a la vitesse
+            self.vitesse = self.vitesse + F
+
+            # limiter la vitesse
+            if self.vitesse.length() > self.vitesseMax - self.taille * 0.05:
+                self.vitesse.scale_to_length(self.vitesseMax - self.taille * 0.05)
+
+        # ajouter la vitesse a la position
+
+        self.position = self.position + self.vitesse
 
 
-        if self.complete:
-            self.fitness =100
-        else:
-            self.fitness = 1 / target.distance_to(self.pos)
+    def deplacer(self, direction, core):
+        if direction > 0 and self.position.x < core.WINDOW_SIZE[0] - self.taille.x:
+            self.position.x += self.vitesse
+        if direction < 0 and self.position.x > 0:
+            self.position.x -= self.vitesse
 
-    def applyFore(self,force):
-        self.acc+=force
-        if self.acc.length() > self.maxAcc:
-            self.acc.scale_to_length(self.maxAcc)
+        if direction > 0 and self.position.y < core.WINDOW_SIZE[0] - self.taille.y:
+            self.position.y += self.vitesse
+        if direction < 0 and self.position.y > 0:
+            self.position.y -= self.vitesse
 
+    def grossir(self, g):
 
-    def update(self, target):
+        pass
 
-        if target.distance_to(self.pos) < 20:
-            self.complete = True
-            self.pos = Vector2(target.x, target.y)
+    def setVitesse(self, v):
+        self.vitesse = v
 
-        self.applyFore(self.dna.gene[self.count])
-        self.count+=1
+    def setPosition(self, pos):
+        self.position = pos
 
-        if self.complete == False :
-            self.vel+=self.acc
-            if self.vel.length() > self.maxVel:
-                self.vel.scale_to_length(self.maxVel)
-            self.pos+=self.vel
-            self.acc = Vector2()
+    def getVitesse(self):
+        return self.vitesse
 
-    def crossover(self, partner):
-        gene = []
-        mid = floor(random.randint(0,len(self.dna.gene)))
-        for i in range(0,len(self.dna.gene)):
-            if i<mid:
-                gene.append(self.dna.gene[i])
-            else:
-                gene.append(partner.dna.gene[i])
-        return DNA(len(gene),gene)
+    def getPosition(self):
+        return self.position
 
-    def show(self,screen):
-        a = -self.vel.angle_to(Vector2(0, -1))
-
-        tl = self.pos + Vector2(-2,-50).rotate(a)
-        tr = self.pos + Vector2(2,-50).rotate(a)
-        bl = self.pos + Vector2(-2,0).rotate(a)
-        br = self.pos + Vector2(2,0).rotate(a)
-
-        pygame.draw.polygon(screen,(255,255,255),(tl,tr,br,bl))
+    def getTaille(self):
+        return self.taille
