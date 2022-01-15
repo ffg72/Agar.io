@@ -1,9 +1,6 @@
 import random
-
 import pygame
 from pygame.math import Vector2
-
-import core
 
 
 class Creep:

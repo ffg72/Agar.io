@@ -1,3 +1,5 @@
+import pygame
+
 import core
 from avatar1 import Avatar
 from creep import Creep
@@ -8,7 +10,7 @@ from ennemis1 import Ennemis
 def setup():
     print("Setup START---------")
     core.fps = 30
-    core.WINDOW_SIZE = [1200, 850]
+    core.WINDOW_SIZE = [1000, 650]
 
     print("Setup END-----------")
 
@@ -29,8 +31,15 @@ def run():
     core.memory("avatar").move(core.getMouseLeftClick())
     core.memory("ennemis").affichage()
     core.memory("ennemis").move(core.memory("avatar").position)
-
+    core.memory("ennemis").fuir("avatar")
     for c in core.memory("listeCreep"):
+        c.collision(core.memory("ennemis"))
         c.collision(core.memory("avatar"))
+
+
+    if core.getKeyPressList(27):
+        pygame.quit()
+
+    #print(core.keyPressValue)
 
 core.main(setup, run)

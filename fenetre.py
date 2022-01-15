@@ -30,3 +30,4 @@ class Fenetre:
         return self.couleur
     def fps(self):
         return self.fps
+'''

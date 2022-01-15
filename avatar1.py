@@ -53,7 +53,7 @@ class Avatar:
         if self.position.y < 0:
             self.position.y = fenetre[1]
 
-        if
+        #if
 
         '''if direction > 0 and self.position.x < core.WINDOW_SIZE[0] - self.taille.x:
             self.position.x += self.vitesse

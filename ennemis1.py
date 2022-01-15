@@ -1,6 +1,5 @@
-import pygame
+import random
 from pygame.math import Vector2
-
 import core
 from core import getMouseLeftClick
 
@@ -17,6 +16,8 @@ class Ennemis:
         self.k = 0.01
         self.l0 = 1
         self.accMax = 0.5
+        self.target = Vector2(random.randint(0,800), random.randint(0,800))
+
 
     def affichage(self):
         core.Draw.circle(self.couleur, self.position, self.taille)
@@ -31,7 +32,7 @@ class Ennemis:
             u = u.normalize()
 
             F = self.k * u * abs(l - self.l0) / self.taille
-            print(F)
+            #print(F)
 
             # limiter la force max
             if F.length() > self.accMax:
@@ -60,9 +61,29 @@ class Ennemis:
         if direction < 0 and self.position.y > 0:
             self.position.y -= self.vitesse
 
-    def grossir(self, g):
+    def manger(self, creep):
+        if creep.position.distance_to(self.position) < self.taille + creep.taille:
+            self.taille = creep.taille + self.taille
+            creep.position = Vector2(random.randint(0, 1600), random.randint(0, 850))
+            creep.couleur = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            print(self.taille)
 
-        pass
+    def fuir(self,avatar):
+        if self.taille < avatar.taille and self.distance(avatar) < 200:
+            self.position = Vector2(random.randint(0,700),(random.randint(0,700)))
+            #point = Vector2(self.position.x - avatar.getPosition().x, self.position.y - avatar.getPosition().y)
+            #self.target = self.position + point
+            print(self.position)
+
+    #def comportement(self, avatar):
+        #if avatar.getTaille() > self.taille and self.distance(avatar) < 200:
+        #self.fuir(avatar)
+
+        #elif avatar.getTaille() < self.taille:
+        #   self.mangerJoueur(avatar)
+
+    def distance(self, avatar):
+        return Vector2(self.position.x - avatar.getPosition().x, self.position.y - avatar.getPosition().y).magnitude()
 
     def setVitesse(self, v):
         self.vitesse = v
