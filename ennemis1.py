@@ -1,8 +1,8 @@
 import random
 from pygame.math import Vector2
-import core
-from core import getMouseLeftClick
-
+import core1
+from core1 import getMouseLeftClick
+import avatar1 as avatar
 
 class Ennemis:
     def __init__(self):
@@ -16,11 +16,11 @@ class Ennemis:
         self.k = 0.01
         self.l0 = 1
         self.accMax = 0.5
-        self.target = Vector2(random.randint(0,800), random.randint(0,800))
+        self.target = Vector2(0, 0)
 
 
     def affichage(self):
-        core.Draw.circle(self.couleur, self.position, self.taille)
+        core1.Draw.circle(self.couleur, self.position, self.taille)
 
     def move(self, destination):
         if destination is not None:
@@ -68,12 +68,15 @@ class Ennemis:
             creep.couleur = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             print(self.taille)
 
-    def fuir(self,avatar):
-        if self.taille < avatar.taille and self.distance(avatar) < 200:
-            self.position = Vector2(random.randint(0,700),(random.randint(0,700)))
+    #def fuir(self,avatar):
+        #if self.taille < avatar.getTaille() and self.distance(avatar) < 200:
             #point = Vector2(self.position.x - avatar.getPosition().x, self.position.y - avatar.getPosition().y)
             #self.target = self.position + point
-            print(self.position)
+            #self.position.x = Vector2(random.randint(0,700),random.randint(0,700))
+
+            #point = Vector2(self.position.x - avatar.getPosition().x, self.position.y - avatar.getPosition().y)
+            #self.target = self.position + point
+            #print(self.position)
 
     #def comportement(self, avatar):
         #if avatar.getTaille() > self.taille and self.distance(avatar) < 200:

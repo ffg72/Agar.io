@@ -1,8 +1,8 @@
 import pygame
 from pygame.math import Vector2
 
-import core
-from core import getMouseLeftClick
+import core1 as core
+from core1 import getMouseLeftClick
 
 
 class Avatar:
